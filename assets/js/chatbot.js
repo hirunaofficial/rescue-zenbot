@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageInput = document.getElementById('message-input');
     const chatMessages = document.querySelector('.chat-messages');
     const typingIndicator = document.querySelector('.typing-indicator');
-    const suggestionContainer = document.querySelector('.suggestion-container'); // Container for suggestions
+    const suggestionContainer = document.querySelector('.suggestion-container');
 
     const SECRET_KEY = "0guFJy9GUFoMcmZ1ZA9UnAjPtn7M58sV";
 
@@ -16,38 +16,62 @@ document.addEventListener('DOMContentLoaded', () => {
             "X-Secret-Key": SECRET_KEY,
         },
     });
-
+        
     // Suggestion messages
     const suggestions = [
         "What are the symptoms of low blood sugar?",
         "What should I do for a back injury?",
         "How do I treat an ear injury?",
         "What should I do if my clothing catches fire"
-    ];    
+    ];
+
+    // Function to get a random suggestion
+    function getRandomSuggestions() {
+        const randomSuggestions = [];
+        while (randomSuggestions.length < 4) {
+            const randomIndex = Math.floor(Math.random() * suggestions.length);
+            if (!randomSuggestions.includes(suggestions[randomIndex])) {
+                randomSuggestions.push(suggestions[randomIndex]);
+            }
+        }
+        return randomSuggestions;
+    }
 
     // Function to show suggestions on startup
     function showSuggestions() {
-        suggestionContainer.innerHTML = ''; // Clear any previous suggestions
-        suggestions.forEach(suggestion => {
-            const suggestionHTML = `
+        suggestionContainer.innerHTML = '';
+        const promptHTML = `
+            <div class="suggestion-header">Ask me a question...</div>
+        `;
+        suggestionContainer.innerHTML += promptHTML;
+    
+        // Get 4 random suggestions from the list
+        const randomSuggestions = getRandomSuggestions();
+    
+        // Display each random suggestion
+        randomSuggestions.forEach(suggestion => {
+            const randomSuggestionHTML = `
                 <div class="suggestion-item">${suggestion}</div>
             `;
-            suggestionContainer.innerHTML += suggestionHTML;
+            suggestionContainer.innerHTML += randomSuggestionHTML;
         });
-
+    
         // Add event listeners to suggestion items
         const suggestionItems = document.querySelectorAll('.suggestion-item');
         suggestionItems.forEach(item => {
             item.addEventListener('click', (e) => {
                 messageInput.value = e.target.textContent;
-                hideSuggestions();  // Hide suggestions after one is clicked
+                hideSuggestions();
+                sendMessage();
             });
         });
     }
 
     // Function to hide suggestions after they are clicked or shown
     function hideSuggestions() {
-        suggestionContainer.innerHTML = ''; // Remove suggestions after they have been clicked or displayed
+        suggestionContainer.innerHTML = '';
+        suggestionContainer.style.display = 'none';
+        
     }
 
     // Function to scroll chat to the bottom
@@ -106,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
             chatModal.style.display = 'flex';
             chatModal.style.animation = 'slideUp 0.3s ease';
             scrollToBottom();
-            showSuggestions(); // Show suggestions when the chat modal is opened for the first time
+            showSuggestions();
         } else {
             chatModal.style.animation = 'slideDown 0.3s ease';
             setTimeout(() => {
@@ -179,9 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
             scrollToBottom();
         }, 300);
     });
-
-    // No longer need to load chat history
-    // loadChatHistory(); (Removed)
 
     const styleSheet = document.createElement('style');
     styleSheet.innerHTML = `
