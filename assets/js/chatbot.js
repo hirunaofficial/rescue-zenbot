@@ -23,24 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeSettingsModal = document.getElementById('close-settings-modal');
     const languageSelect = document.getElementById('language-select');
     const themeToggle = document.getElementById('theme-toggle');
-    // Get references to the modal and buttons
-const welcomeModal = document.getElementById('welcome-modal');
-const startChatBtn = document.getElementById('start-chat-btn');
-const splashScreen = document.getElementById('splash-screen');
+    const splashScreen = document.getElementById('splash-screen');
 
-// Show splash screen and transition to the welcome modal
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        splashScreen.classList.add('hidden'); // Hide splash screen
-        welcomeModal.classList.add('show');  // Show welcome modal
-    }, 1000); // Delay of 1 second
-});
+    // Show splash screen and transition to the chat modal
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            splashScreen.classList.add('hidden'); // Hide splash screen
+            chatModal.style.display = 'flex'; // Show the chat modal
+        }, 3000); // Delay of 2 seconds
+    });
 
-// Show the chatbot when "Get Started" is clicked
-startChatBtn.addEventListener('click', () => {
-    welcomeModal.classList.remove('show');
-    chatModal.style.display = 'block'; // Show the chat modal
-});
     let mediaRecorder;
     let audioChunks = [];
 
@@ -156,6 +148,10 @@ startChatBtn.addEventListener('click', () => {
         if (chatModal.style.display === 'none' || chatModal.style.display === '') {
             chatModal.style.display = 'flex';
             chatModal.style.animation = 'slideUp 0.5s ease';
+            splashScreen.style.display = 'flex'; // Show splash screen
+            setTimeout(() => {
+                splashScreen.style.display = 'none'; // Hide splash screen
+            }, 2000); // Delay of 2 seconds
             scrollToBottom();
             showSuggestions();
         } else {
