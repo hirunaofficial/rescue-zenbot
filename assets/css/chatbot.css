@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Open+Sans:wght@400;600&display=swap');
+
 :root {
     --primary-color: #ffaf00;
     --primary-dark: #222222;
@@ -7,19 +9,21 @@
     --text-dark: #222222;
     --text-light: #ffffff;
     --border-color: #c7c7c7;
-    --online-color: #28a745; /* Green color for online status */
+    --online-color: #28a745;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
 }
 
 body {
     background-color: var(--bg-light);
     color: var(--text-dark);
+    font-family: 'Open Sans', sans-serif;
 }
 
 .chat-container {
@@ -34,8 +38,8 @@ body {
 }
 
 .chat-launcher .ai-icon img {
-    width: 70px; /* Increased width */
-    height: 70px; /* Increased height */
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     border: 3px solid var(--primary-color);
     transition: transform 0.3s ease;
@@ -43,11 +47,11 @@ body {
 
 .chat-launcher .ai-icon .online-indicator {
     position: absolute;
-    bottom: 5px; /* Adjusted for better alignment */
-    right: 5px; /* Adjusted for better alignment */
-    width: 14px; /* Slightly increased size */
-    height: 14px; /* Slightly increased size */
-    background-color: var(--online-color); /* Green color for online status */
+    bottom: 5px;
+    right: 5px;
+    width: 14px;
+    height: 14px;
+    background-color: var(--online-color);
     border-radius: 50%;
     border: 2px solid var(--bg-white);
 }
@@ -94,32 +98,32 @@ body {
 }
 
 .user-info .ai-icon img {
-    width: 50px; /* Increased width */
-    height: 50px; /* Increased height */
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
 .user-info .ai-icon .online-indicator {
     position: absolute;
-    bottom: 5px; /* Adjusted for better alignment */
-    right: 5px; /* Adjusted for better alignment */
-    width: 14px; /* Slightly increased size */
-    height: 14px; /* Slightly increased size */
-    background-color: var(--online-color); /* Green color for online status */
+    bottom: 5px;
+    right: 5px;
+    width: 14px;
+    height: 14px;
+    background-color: var(--online-color);
     border-radius: 50%;
     border: 2px solid var(--bg-white);
 }
 
 .user-details h3 {
     color: var(--primary-dark);
-    font-size: 16px;
+    font-size: 19px;
     margin: 0;
 }
 
 .user-details p {
     color: var(--text-light);
-    font-size: 12px;
+    font-size: 11px;
     margin: 0;
     align-items: center;
     justify-content: center;
@@ -192,19 +196,22 @@ body {
     justify-content: flex-end;
     align-items: flex-end;
     display: flex;
-    margin-bottom: 10px; /* Added margin for gap between messages */
-    max-width: 80%; /* Ensuring correct width */
+    margin-bottom: 10px;
+    max-width: 80%;
 }
 
 .user-message .message-content {
-    background-color: var(--primary-color);
+    background-color: #ffe8b8;
     color: var(--primary-dark);
     border-bottom-right-radius: 0;
     padding: 10px;
     margin-left: auto;
-    width: 100%;
+    width: auto;
+    max-width: 80%;
     box-sizing: border-box;
     word-wrap: break-word;
+    display: inline-block;
+    border-radius: 12px;
 }
 
 .ai-message {
@@ -213,21 +220,23 @@ body {
     justify-content: flex-start;
     align-items: flex-start;
     display: flex;
-    margin-bottom: 10px; /* Added margin for gap between messages */
-    max-width: 80%; /* Ensuring correct width */
+    margin-bottom: 10px;
+    max-width: 80%;
 }
 
 .ai-message .message-content {
-    background-color: var(--bg-light);
+    background-color: #e6e6e6;
     color: var(--text-dark);
     border-bottom-left-radius: 0;
     padding: 10px;
     margin-right: auto;
-    width: 100%;
+    width: auto;
+    max-width: 80%;
     box-sizing: border-box;
     word-wrap: break-word;
+    display: inline-block;
+    border-radius: 12px;
 }
-
 
 .message-time {
     display: block;
@@ -327,8 +336,8 @@ body {
     }
 
     .chat-launcher .ai-icon img {
-        width: 60px; /* Adjust width */
-        height: 60px; /* Adjust height */
+        width: 60px;
+        height: 60px;
     }
 
     .message-content {
@@ -337,15 +346,34 @@ body {
 }
 
 .suggestion-container {
-    margin-top: 10px;
-}
-
-.suggestion-item {
-    background-color: #f0f0f0;
+    background-color: var(--primary-color);
     padding: 8px;
     margin: 5px 0;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 15px;
+    border: 1px solid #e0e0e0;
+}
+
+.suggestion-header {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+    padding: 5px;
+    cursor: default;
+}
+
+.suggestion-item {
+    background-color: #f7f7f7;
+    padding: 8px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    font-size: 15px;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 
 .suggestion-item:hover {
