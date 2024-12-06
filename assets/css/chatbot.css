@@ -47,7 +47,8 @@ body {
     height: 70px;
     border-radius: 50%;
     border: 3px solid var(--primary-color);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .chat-launcher .ai-icon .online-indicator {
@@ -62,7 +63,7 @@ body {
 }
 
 .chat-launcher .ai-icon img:hover {
-    transform: scale(1.1);
+    transform: scale(1.1) rotate(10deg);
 }
 
 /* Chat Modal */
@@ -80,7 +81,11 @@ body {
     bottom: 100px;
     right: 20px;
     overflow: hidden;
-    animation: slideUp 0.4s ease forwards;
+    animation: slideUp 0.5s ease forwards;
+}
+
+.chat-modal.slide-down {
+    animation: slideDown 0.5s ease forwards;
 }
 
 /* Chat Header */
@@ -188,6 +193,8 @@ body {
 
 .header-actions button:hover {
     color: var(--primary-dark);
+    transform: scale(1.1);
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .close-btn {
@@ -201,6 +208,8 @@ body {
 
 .close-btn:hover {
     color: var(--primary-dark);
+    transform: scale(1.1);
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 /* Chat Messages */
@@ -231,6 +240,7 @@ body {
     position: relative;
     background-color: rgba(255,175,0,0.1);
     color: var(--text-dark);
+    animation: fadeIn 0.5s ease;
 }
 
 .user-message {
@@ -373,7 +383,7 @@ body {
     background-color: var(--primary-color);
     border-radius: 50%;
     margin: 0 3px;
-    animation: typing 1.4s infinite;
+    animation: typing 1.4s infinite ease-in-out;
 }
 
 /* Chat Input Wrapper */
@@ -438,7 +448,8 @@ body {
 
 .send-btn:hover {
     background-color: #ffc034;
-    transform: scale(1.05);
+    transform: scale(1.1);
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .send-btn svg {
@@ -489,9 +500,8 @@ body {
 
 /* Animations */
 @keyframes typing {
-    0% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
+    0%, 100% { opacity: 0; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-5px); }
 }
 
 @keyframes slideUp {
@@ -502,4 +512,9 @@ body {
 @keyframes slideDown {
     from { transform: translateY(0); opacity: 1; }
     to { transform: translateY(100%); opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }

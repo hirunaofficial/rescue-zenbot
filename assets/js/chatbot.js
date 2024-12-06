@@ -132,14 +132,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleChat() {
         if (chatModal.style.display === 'none' || chatModal.style.display === '') {
             chatModal.style.display = 'flex';
-            chatModal.style.animation = 'slideUp 0.3s ease';
+            chatModal.style.animation = 'slideUp 0.5s ease';
             scrollToBottom();
             showSuggestions();
         } else {
-            chatModal.style.animation = 'slideDown 0.3s ease';
+            chatModal.classList.add('slide-down');
             setTimeout(() => {
                 chatModal.style.display = 'none';
-            }, 250);
+                chatModal.classList.remove('slide-down');
+            }, 500);
         }
     }
     
