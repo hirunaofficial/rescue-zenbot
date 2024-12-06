@@ -20,7 +20,7 @@ body.dark-mode {
     --secondary-color: #7c7c7c;
     --bg-light: #1a1a1a;
     --bg-white: #1a1a1a;
-    --text-dark: #ffffff;
+    --text-dark: #222222;
     --text-light: #ffffff;
     --border-color: #444444;
     --online-color: #28a745;
@@ -63,19 +63,6 @@ body {
     border: 3px solid var(--primary-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-10px);
-    }
-    60% {
-        transform: translateY(-5px);
-    }
 }
 
 .chat-launcher .ai-icon .online-indicator {
@@ -108,7 +95,7 @@ body {
     bottom: 100px;
     right: 20px;
     overflow: hidden;
-    animation: fadeIn 0.5s ease forwards, slideUp 0.5s ease forwards;
+    animation: slideUp 0.5s ease forwards;
 }
 
 .chat-modal.slide-down {
@@ -131,7 +118,6 @@ body {
     border-radius: 15px 15px 0 0;
     flex-direction: row;
     justify-content: space-between;
-    animation: fadeIn 0.5s ease forwards;
 }
 
 .header-left, .header-right {
@@ -257,7 +243,6 @@ body {
     overflow-y: auto;
     padding: 15px;
     background-color: var(--bg-light);
-    animation: fadeIn 0.5s ease forwards;
 }
 
 .message {
@@ -398,7 +383,6 @@ body {
     font-size: 15px;
     word-wrap: break-word;
     word-break: break-word;
-    animation: fadeIn 0.5s ease forwards;
 }
 
 .suggestion-item:hover {
@@ -415,7 +399,6 @@ body {
     color: var(--secondary-color);
     justify-content: center;
     flex-direction: column;
-    animation: fadeIn 0.5s ease forwards;
 }
 
 .typing-dots {
@@ -437,7 +420,6 @@ body {
     padding: 15px;
     background-color: var(--bg-light);
     border-top: 1px solid var(--border-color);
-    animation: fadeIn 0.5s ease forwards;
 }
 
 .chat-input {
@@ -492,19 +474,6 @@ body {
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     position: relative;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
 }
 
 .send-btn:hover {
@@ -548,7 +517,6 @@ body {
     padding: 20px;
     z-index: 10000;
     text-align: center;
-    animation: fadeIn 0.5s ease forwards;
 }
 
 .voice-modal-content {
@@ -600,7 +568,6 @@ body {
     text-align: center;
     width: 80%;
     max-width: 500px;
-    animation: fadeIn 0.5s ease forwards;
 }
 
 .modal-content {
@@ -662,7 +629,55 @@ body.dark-mode .close-modal {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.5s ease forwards;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode .settings-panel {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+}
+
+.settings-option {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.settings-option label {
+    font-size: 16px;
+    color: var(--text-dark);
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .settings-option label {
+    color: var(--text-light);
+}
+
+.settings-option select,
+.settings-option button {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--input-bg);
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark-mode .settings-option select,
+body.dark-mode .settings-option button {
+    background-color: var(--input-bg);
+    color: var(--text-light);
+    border-color: var(--border-color);
+}
+
+.settings-option button:hover {
+    background-color: var(--primary-color);
+    color: var(--text-light);
 }
 
 body.dark-mode .settings-panel {
