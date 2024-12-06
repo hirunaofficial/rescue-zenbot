@@ -141,10 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
             scrollToBottom();
             showSuggestions();
         } else {
-            chatModal.classList.add('slide-down');
+            chatModal.classList.add('close');
             setTimeout(() => {
                 chatModal.style.display = 'none';
-                chatModal.classList.remove('slide-down');
+                chatModal.classList.remove('close');
             }, 500);
         }
     }
@@ -152,10 +152,11 @@ document.addEventListener('DOMContentLoaded', () => {
     chatLauncher.addEventListener('click', toggleChat);
 
     closeBtn.addEventListener('click', () => {
-        chatModal.style.animation = 'slideDown 0.3s ease';
+        chatModal.classList.add('close');
         setTimeout(() => {
             chatModal.style.display = 'none';
-        }, 250);
+            chatModal.classList.remove('close');
+        }, 500);
     });
 
     // Trigger image input when camera button is clicked
@@ -288,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add functionality to each dropdown item
     shareOption.addEventListener('click', () => {
-        alert('Share feature coming soon!');
+        exportChatAsPDF();
         dropdownMenu.style.display = 'none';
     });
 
@@ -468,4 +469,37 @@ document.addEventListener('DOMContentLoaded', () => {
             recognition.stop();
         }
     });
+
+    function exportChatAsPDF() {
+        const chatContent = Array.from(chatMessages.children)
+            .map(message => {
+                const messageClone = message.cloneNode(true);
+                const images = messageClone.querySelectorAll('img');
+                images.forEach(img => img.remove());
+                return messageClone.outerHTML;
+            })
+            .join('');
+        const style = `
+            <style>
+                body { font-family: 'Open Sans', sans-serif; margin: 20px; }
+                .message { margin-bottom: 15px; display: flex; align-items: flex-start; }
+                .message-content { padding: 10px; border-radius: 12px; max-width: 70%; }
+                .user-message .message-content { background-color: #ffe8b8; margin-left: auto; }
+                .ai-message .message-content { background-color: #e6e6e6; margin-right: auto; }
+                .message-time { font-size: 10px; color: #7c7c7c; margin-top: 5px; }
+                .message-avatar { width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; }
+                .user-message .message-avatar { margin-left: 10px; margin-right: 0; }
+            </style>
+        `;
+        const win = window.open('', '', 'height=700,width=700');
+        win.document.write('<html><head>');
+        win.document.write('<title>Chat Export</title>');
+        win.document.write(style);
+        win.document.write('</head><body>');
+        win.document.write(chatContent);
+        win.document.write('</body></html>');
+        win.document.close();
+        win.print();
+    }
+
 });

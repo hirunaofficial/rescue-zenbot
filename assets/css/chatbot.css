@@ -17,8 +17,8 @@
 body.dark-mode {
     --primary-color: #ffaf00;
     --primary-dark: #1a1a1a;
-    --secondary-color: #121212;
-    --bg-light: #121212;
+    --secondary-color: #7c7c7c;
+    --bg-light: #1a1a1a;
     --bg-white: #1a1a1a;
     --text-dark: #ffffff;
     --text-light: #ffffff;
@@ -102,6 +102,10 @@ body {
     animation: slideDown 0.5s ease forwards;
 }
 
+.chat-modal.close {
+    animation: closeChat 0.5s ease forwards;
+}
+
 /* Chat Header */
 .chat-header {
     background-color: var(--primary-color);
@@ -112,6 +116,13 @@ body {
     align-items: center;
     border-bottom: 1px solid var(--border-color);
     border-radius: 15px 15px 0 0;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
 }
 
 .user-info {
@@ -166,8 +177,8 @@ body {
     position: absolute;
     top: 100%;
     right: 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
+    background-color: var(--bg-white);
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 10;
@@ -188,11 +199,11 @@ body {
 }
 
 .dropdown-item:hover {
-    background-color: #f0f0f0;
+    background-color: var(--input-bg);
 }
 
 .dropdown-item i {
-    color: #333;
+    color: var(--primary-dark);
 }
 
 .header-actions button {
@@ -628,8 +639,10 @@ body.dark-mode .settings-panel {
 /* Responsive Design */
 @media screen and (max-width: 480px) {
     .chat-container {
-        bottom: 10px;
-        right: 10px;
+        bottom: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
     }
 
     .chat-modal {
@@ -645,13 +658,18 @@ body.dark-mode .settings-panel {
     .chat-header {
         border-radius: 0;
         padding: 10px;
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .header-left, .header-right {
+        display: flex;
+        align-items: center;
     }
 
     .user-info {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
     }
 
     .user-info .ai-icon img {
@@ -668,13 +686,19 @@ body.dark-mode .settings-panel {
     }
 
     .header-actions {
-        width: 100%;
-        justify-content: space-between;
-        margin-top: 10px;
+        width: auto;
+        justify-content: flex-end;
+        margin-top: 0;
     }
 
     .header-actions button {
         font-size: 16px;
+    }
+
+    .chat-launcher .ai-icon {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
     }
 
     .chat-launcher .ai-icon img {
@@ -693,19 +717,27 @@ body.dark-mode .settings-panel {
     }
 
     .input-actions .action-btn {
-        font-size: 14px;
-        margin: 0 5px;
+        font-size: 20px;
+        margin: 0 10px;
     }
 
     .send-btn {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
     }
 
     .dropdown-menu {
         right: 10px;
         left: 10px;
         width: auto;
+        display: block;
+        position: relative;
+        top: auto;
+        background-color: var(--bg-white);
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 10;
     }
 
     .dropdown-item {
@@ -716,6 +748,10 @@ body.dark-mode .settings-panel {
     .settings-panel {
         width: 90%;
         margin: 0 auto;
+    }
+
+    .menu-open .dropdown-menu {
+        display: block;
     }
 }
 
@@ -738,6 +774,16 @@ body.dark-mode .settings-panel {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(10px); }
+}
+
+@keyframes closeChat {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(100%); opacity: 0; }
 }
 
 /* Recording Message */
