@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const historyOption = document.getElementById('history-option');
     const settingsOption = document.getElementById('settings-option');
     const speakersOption = document.getElementById('speakers-option');
+    const imageInput = document.getElementById('image-input');
+    const imagePreview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
+    const removeImageBtn = document.getElementById('remove-image-btn');
+    const cameraBtn = document.getElementById('camera-btn');
 
     const SECRET_KEY = "0guFJy9GUFoMcmZ1ZA9UnAjPtn7M58sV";
 
@@ -57,16 +62,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
         chatMessages.innerHTML += suggestionsHTML;
     
-        // Add event delegation for suggestion items
-        chatMessages.addEventListener('click', (e) => {
-            if (e.target.classList.contains('suggestion-item')) {
-                messageInput.value = e.target.textContent;
-                sendMessage();
-            }
-        });
+        // Remove existing event listener to prevent duplication
+        chatMessages.removeEventListener('click', handleSuggestionClick);
+        chatMessages.addEventListener('click', handleSuggestionClick);
     
         scrollToBottom();
     }    
+
+    function handleSuggestionClick(e) {
+        if (e.target.classList.contains('suggestion-item')) {
+            messageInput.value = e.target.textContent;
+            sendMessage();
+        }
+    }
 
     // Function to scroll chat to the bottom
     function scrollToBottom() {
@@ -84,11 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="message-content">
                     <p>${data.response}</p>
                     <span class="message-time">${getCurrentTime()}</span>
+                    <button class="speaker-btn"><i class="fa-solid fa-volume-up"></i></button>
                 </div>
             </div>
         `;
         chatMessages.innerHTML += botMessageHTML;
         scrollToBottom();
+        addSpeakerFunctionality();
     }, 1500);
 });
 
@@ -143,13 +153,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 250);
     });
 
+    // Trigger image input when camera button is clicked
+    cameraBtn.addEventListener('click', () => {
+        imageInput.click();
+    });
+
+    // Handle image upload
+    imageInput.addEventListener('change', () => {
+        const file = imageInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.style.display = 'none';
+        }
+    });
+
+    // Remove image preview
+    removeImageBtn.addEventListener('click', () => {
+        previewImg.src = '';
+        imagePreview.style.display = 'none';
+        imageInput.value = '';
+    });
+
     function sendMessage() {
         const message = messageInput.value.trim();
-        if (!message) return;
+        const imageSrc = previewImg.src;
+        if (!message && !imageSrc) return;
+    
         const userMessageHTML = `
             <div class="message user-message">
                 <div class="message-content">
                     <p>${message}</p>
+                    ${imageSrc && imageInput.files.length > 0 ? `<img src="${imageSrc}" alt="Uploaded Image" style="max-width: 100%; margin-top: 10px;">` : ''}
+                    <button class="speaker-btn"><i class="fa-solid fa-volume-up"></i></button>
                     <span class="message-time">${getCurrentTime()}</span>
                 </div>
                 <img src="assets/img/chatbot/chat-user.png" alt="User" class="message-avatar">
@@ -157,12 +198,19 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         chatMessages.innerHTML += userMessageHTML;
         messageInput.value = '';
+        if (imageSrc && imageInput.files.length > 0) {
+            previewImg.src = '';
+            imagePreview.style.display = 'none';
+            imageInput.value = '';
+        }
         typingIndicator.style.display = 'flex';
         socket.emit("chat_message", {
             message: message,
+            image: imageSrc && imageInput.files.length > 0 ? imageSrc : null,
             secret_key: SECRET_KEY,
         });
         scrollToBottom();
+        addSpeakerFunctionality();
     }
 
     function getCurrentTime() {
@@ -237,16 +285,16 @@ newChatOption.addEventListener('click', () => {
         `;
         messageInput.value = ''; // Clear input field
         dropdownMenu.style.display = 'none'; // Hide menu after action
-    }
         // Show suggestions
         showSuggestions();
+    }
 });
 
 
     // Add functionality to each dropdown item
     shareOption.addEventListener('click', () => {
         alert('Share feature coming soon!');
-        dropdownMenu.style.display = 'none'; // Hide menu after click
+        dropdownMenu.style.display = 'none';
     });
 
     historyOption.addEventListener('click', () => {
@@ -260,10 +308,34 @@ newChatOption.addEventListener('click', () => {
     });
 
     speakersOption.addEventListener('click', () => {
-        const messages = document.querySelectorAll('.chat-messages .message-content p');
-        const chatText = Array.from(messages).map(msg => msg.textContent).join('. ');
-        const speech = new SpeechSynthesisUtterance(chatText);
-        window.speechSynthesis.speak(speech);
+        if ('speechSynthesis' in window) {
+            const messages = document.querySelectorAll('.chat-messages .message-content p');
+            const chatText = Array.from(messages).map(msg => msg.textContent).join('. ');
+            const speech = new SpeechSynthesisUtterance(chatText);
+
+            function setVoice() {
+                const voices = window.speechSynthesis.getVoices();
+                const femaleVoice = voices.find(voice => voice.name.includes('Female') || voice.gender === 'female');
+                if (femaleVoice) {
+                    speech.voice = femaleVoice;
+                } else if (voices.length > 0) {
+                    speech.voice = voices[0];
+                }
+                window.speechSynthesis.speak(speech);
+            }
+
+            if (window.speechSynthesis.getVoices().length === 0) {
+                window.speechSynthesis.addEventListener('voiceschanged', setVoice);
+            } else {
+                setVoice();
+            }
+
+            speech.onerror = (event) => {
+                console.error('Speech synthesis error:', event.error);
+            };
+        } else {
+            alert('Sorry, your browser does not support speech synthesis.');
+        }
         dropdownMenu.style.display = 'none';
     });
 
@@ -273,5 +345,37 @@ newChatOption.addEventListener('click', () => {
             dropdownMenu.style.display = 'none';
         }
     });
+
+    function addSpeakerFunctionality() {
+        const speakerButtons = document.querySelectorAll('.speaker-btn');
+        speakerButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const messageContent = button.previousElementSibling.textContent;
+                if ('speechSynthesis' in window) {
+                    const speech = new SpeechSynthesisUtterance(messageContent);
+                    function setVoice() {
+                        const voices = window.speechSynthesis.getVoices();
+                        const femaleVoice = voices.find(voice => voice.name.includes('Female') || voice.gender === 'female');
+                        if (femaleVoice) {
+                            speech.voice = femaleVoice;
+                        } else if (voices.length > 0) {
+                            speech.voice = voices[0];
+                        }
+                        window.speechSynthesis.speak(speech);
+                    }
+                    if (window.speechSynthesis.getVoices().length === 0) {
+                        window.speechSynthesis.addEventListener('voiceschanged', setVoice);
+                    } else {
+                        setVoice();
+                    }
+                    speech.onerror = (event) => {
+                        console.error('Speech synthesis error:', event.error);
+                    };
+                } else {
+                    alert('Sorry, your browser does not support speech synthesis.');
+                }
+            });
+        });
+    }
 
 });

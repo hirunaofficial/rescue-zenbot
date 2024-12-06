@@ -47,6 +47,7 @@
                     <div class="message-content">
                         <p>Hello! I'm Rescue ZenBot. How can I assist you today?</p>
                         <span class="message-time">10:35 AM</span>
+                        <button class="speaker-btn"><i class="fa-solid fa-volume-up"></i></button>
                     </div>
                 </div>
             </div>
@@ -62,9 +63,10 @@
             <div class="chat-input-wrapper">
                 <div class="chat-input">
                     <div class="input-actions">
-                        <button class="action-btn camera-btn">
+                        <button class="action-btn camera-btn" id="camera-btn">
                             <i class="fa-solid fa-camera"></i>
                         </button>
+                        <input type="file" id="image-input" accept="image/*" style="display: none;">
                         <input type="text" id="message-input" placeholder="Type your message...">
                         <button class="action-btn microphone-btn">
                             <i class="fa-solid fa-microphone"></i>
@@ -72,6 +74,12 @@
                     </div>
                     <button class="send-btn">
                         <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div id="image-preview" style="display: none; position: relative; margin-top: 10px;">
+                    <img id="preview-img" src="" alt="Image Preview" style="max-width: 100%; max-height: 100px;">
+                    <button id="remove-image-btn" style="position: absolute; top: 5px; right: 5px; background: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                        &times;
                     </button>
                 </div>
             </div>

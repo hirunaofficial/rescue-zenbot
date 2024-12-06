@@ -282,10 +282,36 @@ body {
 }
 
 .message-time {
-    display: block;
+    display: inline-block;
     font-size: 10px;
     color: var(--secondary-color);
     margin-top: 5px;
+    vertical-align: middle;
+}
+
+.speaker-btn {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    margin-left: 5px;
+    vertical-align: middle;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.speaker-btn:hover {
+    color: var(--primary-color);
+}
+
+.user-message .speaker-btn {
+    margin-left: 0;
+    margin-right: 5px;
+}
+
+.ai-message .speaker-btn {
+    margin-left: 5px;
+    margin-right: 0;
 }
 
 /* Suggestion Container */
