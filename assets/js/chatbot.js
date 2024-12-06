@@ -41,7 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function showSuggestions() {
         suggestionContainer.innerHTML = '';
         const promptHTML = `
+         <button class="close-btn"><i class="fas fa-times"></i></button> 
             <div class="suggestion-header">Ask me a question...</div>
+           
         `;
         suggestionContainer.innerHTML += promptHTML;
     
