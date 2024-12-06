@@ -264,11 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Toggle dropdown menu visibility
     menuBtn.addEventListener('click', () => {
-        if (dropdownMenu.style.display === 'block') {
-            dropdownMenu.style.display = 'none';
-        } else {
-            dropdownMenu.style.display = 'block';
-        }
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
     });
 
     // Clear chat for "New Chat" option
@@ -357,6 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const messages = document.querySelectorAll('.chat-messages .message-content p');
             const chatText = Array.from(messages).map(msg => msg.textContent).join('. ');
             const speech = new SpeechSynthesisUtterance(chatText);
+            speech.lang = 'en-US'; // Set default language to English
 
             function setVoice() {
                 const voices = window.speechSynthesis.getVoices();
@@ -398,6 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const messageContent = button.previousElementSibling.textContent;
                 if ('speechSynthesis' in window) {
                     const speech = new SpeechSynthesisUtterance(messageContent);
+                    speech.lang = 'en-US'; // Set default language to English
                     function setVoice() {
                         const voices = window.speechSynthesis.getVoices();
                         const femaleVoice = voices.find(voice => voice.name.includes('Female') || voice.gender === 'female');
@@ -437,6 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <i class="fa-solid fa-microphone-slash"></i>
                     </button>
                 </div>
+                <div class="recording-bar"></div>
             </div>
         `;
         chatMessages.innerHTML += recordingMessageHTML;
