@@ -8,6 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.querySelector('.chat-messages');
     const typingIndicator = document.querySelector('.typing-indicator');
     const suggestionContainer = document.querySelector('.suggestion-container');
+    const menuBtn = document.querySelector('.menu-btn');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+    const newChatOption = document.getElementById('new-chat-option');
+    const shareOption = document.getElementById('share-option');
+    const historyOption = document.getElementById('history-option');
+    const settingsOption = document.getElementById('settings-option');
+    const speakersOption = document.getElementById('speakers-option');
 
     const SECRET_KEY = "0guFJy9GUFoMcmZ1ZA9UnAjPtn7M58sV";
 
@@ -201,4 +208,70 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     `;
     document.head.appendChild(styleSheet);
+
+    //drop down list
+
+    
+    // Toggle dropdown menu visibility
+    menuBtn.addEventListener('click', () => {
+        if (dropdownMenu.style.display === 'block') {
+            dropdownMenu.style.display = 'none';
+        } else {
+            dropdownMenu.style.display = 'block';
+        }
+    });
+// Clear chat for "New Chat" option
+newChatOption.addEventListener('click', () => {
+    if (confirm('Are you sure you want to start a new chat? This will clear the current conversation.')) {
+        chatMessages.innerHTML = `
+            <div class="message ai-message">
+                <img src="assets/img/chatbot/chat-bot.png" alt="AI" class="message-avatar">
+                <div class="message-content">
+                    <p>Hello! I'm Rescue ZenBot. How can I assist you today?</p>
+                    
+                    <span class="message-time">${getCurrentTime()}</span>
+                </div>
+                
+            </div>
+            
+        `;
+        messageInput.value = ''; // Clear input field
+        dropdownMenu.style.display = 'none'; // Hide menu after action
+    }
+        // Show suggestions
+        showSuggestions();
+});
+
+
+    // Add functionality to each dropdown item
+    shareOption.addEventListener('click', () => {
+        alert('Share feature coming soon!');
+        dropdownMenu.style.display = 'none'; // Hide menu after click
+    });
+
+    historyOption.addEventListener('click', () => {
+        alert('Chat history feature coming soon!');
+        dropdownMenu.style.display = 'none';
+    });
+
+    settingsOption.addEventListener('click', () => {
+        alert('Settings feature coming soon!');
+        dropdownMenu.style.display = 'none';
+    });
+
+    speakersOption.addEventListener('click', () => {
+        const messages = document.querySelectorAll('.chat-messages .message-content p');
+        const chatText = Array.from(messages).map(msg => msg.textContent).join('. ');
+        const speech = new SpeechSynthesisUtterance(chatText);
+        window.speechSynthesis.speak(speech);
+        dropdownMenu.style.display = 'none';
+    });
+
+    // Hide dropdown if clicked outside
+    document.addEventListener('click', (e) => {
+        if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.style.display = 'none';
+        }
+    });
+
 });
