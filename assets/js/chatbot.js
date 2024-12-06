@@ -23,6 +23,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeSettingsModal = document.getElementById('close-settings-modal');
     const languageSelect = document.getElementById('language-select');
     const themeToggle = document.getElementById('theme-toggle');
+    // Get references to the modal and buttons
+const welcomeModal = document.getElementById('welcome-modal');
+const startChatBtn = document.getElementById('start-chat-btn');
+const splashScreen = document.getElementById('splash-screen');
+
+// Show splash screen and transition to the welcome modal
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        splashScreen.classList.add('hidden'); // Hide splash screen
+        welcomeModal.classList.add('show');  // Show welcome modal
+    }, 1000); // Delay of 1 second
+});
+
+// Show the chatbot when "Get Started" is clicked
+startChatBtn.addEventListener('click', () => {
+    welcomeModal.classList.remove('show');
+    chatModal.style.display = 'block'; // Show the chat modal
+});
     let mediaRecorder;
     let audioChunks = [];
 
