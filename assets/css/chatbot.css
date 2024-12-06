@@ -137,6 +137,7 @@ body {
 /* Header Actions */
 .header-actions {
     display: flex;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -256,9 +257,10 @@ body {
 .suggestion-container {
     background-color: var(--primary-color);
     padding: 8px;
-    margin: 5px 0;
+    margin: 5px 35px;
     border-radius: 15px;
     border: 1px solid #e0e0e0;
+    background-clip: padding-box;
 }
 
 .suggestion-header {
@@ -322,7 +324,6 @@ body {
 
 .chat-input {
     display: flex;
-    align-items: center;
     background-color: var(--input-bg);
     border-radius: 40px;
     padding: 5px;
@@ -411,10 +412,6 @@ body {
 
     .message-content {
         max-width: 80%;
-    }
-
-    .chat-input {
-        flex-direction: column;
     }
 
     .input-actions {
