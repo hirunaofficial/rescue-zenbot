@@ -39,66 +39,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to show suggestions on startup
     function showSuggestions() {
-        suggestionContainer.innerHTML = '';
-        const promptHTML = `
-            <div class="header-actions"><button class="close-btn"><i class="fas fa-times"></i></button></div>
-            <div class="suggestion-header">Ask me a question...</div>
-           
+        const suggestionsHTML = `
+            <div class="suggestion-container">
+                <div class="suggestion-header">Ask me a question...</div>
+                ${getRandomSuggestions().map(suggestion => `
+                    <div class="suggestion-item">${suggestion}</div>
+                `).join('')}
+            </div>
         `;
-        suggestionContainer.innerHTML += promptHTML;
     
-        // Get 4 random suggestions from the list
-        const randomSuggestions = getRandomSuggestions();
+        chatMessages.innerHTML += suggestionsHTML;
     
-        // Display each random suggestion
-        randomSuggestions.forEach(suggestion => {
-            const randomSuggestionHTML = `
-                <div class="suggestion-item">${suggestion}</div>
-            `;
-            suggestionContainer.innerHTML += randomSuggestionHTML;
-        });
-    
-        // Add event listeners to suggestion items
-        const suggestionItems = document.querySelectorAll('.suggestion-item');
-        suggestionItems.forEach(item => {
-            item.addEventListener('click', (e) => {
+        // Add event delegation for suggestion items
+        chatMessages.addEventListener('click', (e) => {
+            if (e.target.classList.contains('suggestion-item')) {
                 messageInput.value = e.target.textContent;
-                hideSuggestions();
                 sendMessage();
-            });
+            }
         });
-    }
-
-    // Function to hide suggestions after they are clicked or shown
-    function hideSuggestions() {
-        suggestionContainer.innerHTML = '';
-        suggestionContainer.style.display = 'none';
-        
-    }
+    
+        scrollToBottom();
+    }    
 
     // Function to scroll chat to the bottom
     function scrollToBottom() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Handle incoming messages from the server
-    socket.on("chat_response", (data) => {
-        setTimeout(() => {
-            typingIndicator.style.display = 'none';
+   // Handle incoming messages from the server
+   socket.on("chat_response", (data) => {
+    setTimeout(() => {
+        typingIndicator.style.display = 'none';
 
-            const botMessageHTML = `
-                <div class="message ai-message">
-                    <img src="assets/img/chatbot/chat-bot.png" alt="AI" class="message-avatar">
-                    <div class="message-content">
-                        <p>${data.response}</p>
-                        <span class="message-time">${getCurrentTime()}</span>
-                    </div>
+        const botMessageHTML = `
+            <div class="message ai-message">
+                <img src="assets/img/chatbot/chat-bot.png" alt="AI" class="message-avatar">
+                <div class="message-content">
+                    <p>${data.response}</p>
+                    <span class="message-time">${getCurrentTime()}</span>
                 </div>
-            `;
-            chatMessages.innerHTML += botMessageHTML;
-            scrollToBottom();
-        }, 1500);
-    });
+            </div>
+        `;
+        chatMessages.innerHTML += botMessageHTML;
+        scrollToBottom();
+    }, 1500);
+});
 
     // Handle disconnection or authentication issues
     socket.on("disconnect", (reason) => {
@@ -140,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 250);
         }
     }
+    
 
     chatLauncher.addEventListener('click', toggleChat);
 
@@ -153,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function sendMessage() {
         const message = messageInput.value.trim();
         if (!message) return;
-
         const userMessageHTML = `
             <div class="message user-message">
                 <div class="message-content">
@@ -165,9 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         chatMessages.innerHTML += userMessageHTML;
         messageInput.value = '';
-
         typingIndicator.style.display = 'flex';
-
         socket.emit("chat_message", {
             message: message,
             secret_key: SECRET_KEY,
