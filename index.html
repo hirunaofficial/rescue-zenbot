@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rescue ZenBot</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="./assets/css/chatbot.css">
@@ -45,7 +45,7 @@
                 <div class="message ai-message">
                     <img src="assets/img/chatbot/chat-bot.png" alt="AI" class="message-avatar">
                     <div class="message-content">
-                        <p>Hello! I'm Rescue ZenBot. How can I assist you today?</p>
+                        <p data-translate="greeting">Hello! I'm Rescue ZenBot. How can I assist you today?</p>
                         <span class="message-time">10:35 AM</span>
                         <button class="speaker-btn"><i class="fa-solid fa-volume-up"></i></button>
                     </div>
@@ -58,7 +58,7 @@
                     <span></span>
                     <span></span>
                 </div>
-                Rescue ZenBot is typing...
+                <span data-translate="typing">Rescue ZenBot is typing...</span>
             </div>
             <div class="chat-input-wrapper">
                 <div class="chat-input">
@@ -68,7 +68,7 @@
                         </button>
                         <input type="file" id="image-input" accept="image/*" style="display: none;">
                         <input type="text" id="message-input" placeholder="Type your message...">
-                        <button class="action-btn microphone-btn">
+                        <button class="action-btn microphone-btn" id="start-recording-btn">
                             <i class="fa-solid fa-microphone"></i>
                         </button>
                     </div>
@@ -83,9 +83,30 @@
                     </button>
                 </div>
             </div>
+            <div id="settings-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal" id="close-settings-modal">&times;</span>
+                    <h3 data-translate="settings">Settings</h3>
+                    <div class="settings-option">
+                        <label for="language-select" data-translate="language">Language:</label>
+                        <select id="language-select">
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <!-- Add more languages as needed -->
+                        </select>
+                    </div>
+                    <div class="settings-option">
+                        <label for="theme-toggle" data-translate="theme">Theme:</label>
+                        <button id="theme-toggle" data-translate="toggleTheme">Toggle Dark/Light Mode</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
     <script src="./assets/js/chatbot.js"></script>
 </body>
 </html>

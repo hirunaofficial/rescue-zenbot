@@ -14,6 +14,20 @@
     --input-border: #e0e0e0;
 }
 
+body.dark-mode {
+    --primary-color: #ffaf00;
+    --primary-dark: #1a1a1a;
+    --secondary-color: #121212;
+    --bg-light: #121212;
+    --bg-white: #1a1a1a;
+    --text-dark: #ffffff;
+    --text-light: #ffffff;
+    --border-color: #444444;
+    --online-color: #28a745;
+    --input-bg: #333333;
+    --input-border: #555555;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -241,6 +255,8 @@ body {
     background-color: rgba(255,175,0,0.1);
     color: var(--text-dark);
     animation: fadeIn 0.5s ease;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 
 .user-message {
@@ -263,6 +279,7 @@ body {
     max-width: 80%;
     box-sizing: border-box;
     word-wrap: break-word;
+    word-break: break-word;
     display: inline-block;
     border-radius: 12px;
 }
@@ -287,6 +304,7 @@ body {
     max-width: 80%;
     box-sizing: border-box;
     word-wrap: break-word;
+    word-break: break-word;
     display: inline-block;
     border-radius: 12px;
 }
@@ -444,6 +462,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    position: relative;
 }
 
 .send-btn:hover {
@@ -454,6 +473,156 @@ body {
 
 .send-btn svg {
     stroke: var(--text-light);
+}
+
+.send-btn::after {
+    content: 'Send';
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.send-btn:hover::after {
+    opacity: 1;
+}
+
+/* Voice Modal */
+.voice-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--bg-white);
+    border-radius: 10px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 10000;
+    text-align: center;
+}
+
+.voice-modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.voice-modal-content h3 {
+    margin-bottom: 20px;
+}
+
+.voice-modal-content .action-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.voice-modal-content .action-btn:hover {
+    color: var(--primary-dark);
+    transform: scale(1.1);
+}
+
+.voice-message {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.voice-message audio {
+    margin-right: 10px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--bg-white);
+    border-radius: 10px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 10000;
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--primary-dark);
+}
+
+body.dark-mode .close-modal {
+    color: var(--text-light);
+}
+
+.close-modal:hover {
+    color: var(--primary-color);
+}
+
+.settings-option {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.settings-option label {
+    font-size: 16px;
+    color: var(--text-dark);
+}
+
+.settings-option select,
+.settings-option button {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--input-bg);
+    color: var(--text-dark);
+    cursor: pointer;
+}
+
+.settings-option button:hover {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+/* Settings Panel */
+.settings-panel {
+    background-color: var(--bg-white);
+    color: var(--text-dark);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .settings-panel {
+    background-color: var(--bg-light);
+    color: var(--text-light);
 }
 
 /* Responsive Design */
@@ -496,6 +665,22 @@ body {
         width: 40px;
         height: 40px;
     }
+
+    .dropdown-menu {
+        right: 10px;
+        left: 10px;
+        width: auto;
+    }
+
+    .dropdown-item {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .settings-panel {
+        width: 90%;
+        margin: 0 auto;
+    }
 }
 
 /* Animations */
@@ -517,4 +702,36 @@ body {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* Recording Message */
+.recording-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 175, 0, 0.1);
+    color: var(--text-dark);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.recording-message .message-content {
+    display: flex;
+    align-items: center;
+}
+
+.recording-message .action-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.recording-message .action-btn:hover {
+    color: var(--primary-dark);
+    transform: scale(1.1);
 }

@@ -2,12 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatLauncher = document.querySelector('.chat-launcher');
     const chatModal = document.querySelector('.chat-modal');
     const closeBtn = document.querySelector('.close-btn');
-    const minimizeBtn = document.querySelector('.minimize-btn');
     const sendBtn = document.querySelector('.send-btn');
     const messageInput = document.getElementById('message-input');
     const chatMessages = document.querySelector('.chat-messages');
     const typingIndicator = document.querySelector('.typing-indicator');
-    const suggestionContainer = document.querySelector('.suggestion-container');
     const menuBtn = document.querySelector('.menu-btn');
     const dropdownMenu = document.querySelector('.dropdown-menu');
     const newChatOption = document.getElementById('new-chat-option');
@@ -20,6 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewImg = document.getElementById('preview-img');
     const removeImageBtn = document.getElementById('remove-image-btn');
     const cameraBtn = document.getElementById('camera-btn');
+    const startRecordingBtn = document.getElementById('start-recording-btn');
+    const settingsModal = document.getElementById('settings-modal');
+    const closeSettingsModal = document.getElementById('close-settings-modal');
+    const languageSelect = document.getElementById('language-select');
+    const themeToggle = document.getElementById('theme-toggle');
+    let mediaRecorder;
+    let audioChunks = [];
 
     const SECRET_KEY = "0guFJy9GUFoMcmZ1ZA9UnAjPtn7M58sV";
 
@@ -28,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "X-Secret-Key": SECRET_KEY,
         },
     });
-        
+
     // Suggestion messages
     const suggestions = [
         "What are the symptoms of low blood sugar?",
@@ -81,26 +86,26 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-   // Handle incoming messages from the server
-   socket.on("chat_response", (data) => {
-    setTimeout(() => {
-        typingIndicator.style.display = 'none';
+    // Handle incoming messages from the server
+    socket.on("chat_response", (data) => {
+        setTimeout(() => {
+            typingIndicator.style.display = 'none';
 
-        const botMessageHTML = `
-            <div class="message ai-message">
-                <img src="assets/img/chatbot/chat-bot.png" alt="AI" class="message-avatar">
-                <div class="message-content">
-                    <p>${data.response}</p>
-                    <span class="message-time">${getCurrentTime()}</span>
-                    <button class="speaker-btn"><i class="fa-solid fa-volume-up"></i></button>
+            const botMessageHTML = `
+                <div class="message ai-message">
+                    <img src="assets/img/chatbot/chat-bot.png" alt="AI" class="message-avatar">
+                    <div class="message-content">
+                        <p>${data.response}</p>
+                        <span class="message-time">${getCurrentTime()}</span>
+                        <button class="speaker-btn"><i class="fa-solid fa-volume-up"></i></button>
+                    </div>
                 </div>
-            </div>
-        `;
-        chatMessages.innerHTML += botMessageHTML;
-        scrollToBottom();
-        addSpeakerFunctionality();
-    }, 1500);
-});
+            `;
+            chatMessages.innerHTML += botMessageHTML;
+            scrollToBottom();
+            addSpeakerFunctionality();
+        }, 1500);
+    });
 
     // Handle disconnection or authentication issues
     socket.on("disconnect", (reason) => {
@@ -143,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         }
     }
-    
 
     chatLauncher.addEventListener('click', toggleChat);
 
@@ -258,9 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(styleSheet);
 
-    //drop down list
-
-    
     // Toggle dropdown menu visibility
     menuBtn.addEventListener('click', () => {
         if (dropdownMenu.style.display === 'block') {
@@ -269,28 +270,25 @@ document.addEventListener('DOMContentLoaded', () => {
             dropdownMenu.style.display = 'block';
         }
     });
-// Clear chat for "New Chat" option
-newChatOption.addEventListener('click', () => {
-    if (confirm('Are you sure you want to start a new chat? This will clear the current conversation.')) {
-        chatMessages.innerHTML = `
-            <div class="message ai-message">
-                <img src="assets/img/chatbot/chat-bot.png" alt="AI" class="message-avatar">
-                <div class="message-content">
-                    <p>Hello! I'm Rescue ZenBot. How can I assist you today?</p>
-                    
-                    <span class="message-time">${getCurrentTime()}</span>
-                </div>
-                
-            </div>
-            
-        `;
-        messageInput.value = ''; // Clear input field
-        dropdownMenu.style.display = 'none'; // Hide menu after action
-        // Show suggestions
-        showSuggestions();
-    }
-});
 
+    // Clear chat for "New Chat" option
+    newChatOption.addEventListener('click', () => {
+        if (confirm('Are you sure you want to start a new chat? This will clear the current conversation.')) {
+            chatMessages.innerHTML = `
+                <div class="message ai-message">
+                    <img src="assets/img/chatbot/chat-bot.png" alt="AI" class="message-avatar">
+                    <div class="message-content">
+                        <p>Hello! I'm Rescue ZenBot. How can I assist you today?</p>
+                        <span class="message-time">${getCurrentTime()}</span>
+                    </div>
+                </div>
+            `;
+            messageInput.value = ''; // Clear input field
+            dropdownMenu.style.display = 'none'; // Hide menu after action
+            // Show suggestions
+            showSuggestions();
+        }
+    });
 
     // Add functionality to each dropdown item
     shareOption.addEventListener('click', () => {
@@ -304,9 +302,55 @@ newChatOption.addEventListener('click', () => {
     });
 
     settingsOption.addEventListener('click', () => {
-        alert('Settings feature coming soon!');
+        settingsModal.style.display = 'block';
         dropdownMenu.style.display = 'none';
     });
+
+    closeSettingsModal.addEventListener('click', () => {
+        settingsModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === settingsModal) {
+            settingsModal.style.display = 'none';
+        }
+    });
+
+    languageSelect.addEventListener('change', (e) => {
+        const selectedLanguage = e.target.value;
+        updateLanguage(selectedLanguage);
+    });
+
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+    });
+
+    function updateLanguage(language) {
+        const elementsToTranslate = document.querySelectorAll('.message-content p[data-translate]');
+        elementsToTranslate.forEach(element => {
+            const key = element.getAttribute('data-translate');
+            element.textContent = translations[language][key];
+        });
+    }
+
+    const translations = {
+        en: {
+            greeting: "Hello! I'm Rescue ZenBot. How can I assist you today?",
+            typing: "Rescue ZenBot is typing..."
+        },
+        es: {
+            greeting: "¡Hola! Soy Rescue ZenBot. ¿Cómo puedo ayudarte hoy?",
+            typing: "Rescue ZenBot está escribiendo..."
+        },
+        fr: {
+            greeting: "Bonjour! Je suis Rescue ZenBot. Comment puis-je vous aider aujourd'hui?",
+            typing: "Rescue ZenBot est en train d'écrire..."
+        },
+        de: {
+            greeting: "Hallo! Ich bin Rescue ZenBot. Wie kann ich Ihnen heute helfen?",
+            typing: "Rescue ZenBot tippt..."
+        }
+    };
 
     speakersOption.addEventListener('click', () => {
         if ('speechSynthesis' in window) {
@@ -379,4 +423,50 @@ newChatOption.addEventListener('click', () => {
         });
     }
 
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    startRecordingBtn.addEventListener('click', () => {
+        const recordingMessageHTML = `
+            <div class="message system-message recording-message">
+                <div class="message-content">
+                    <p>Recording...</p>
+                    <button id="stop-recording-btn" class="action-btn microphone-btn">
+                        <i class="fa-solid fa-microphone-slash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        chatMessages.innerHTML += recordingMessageHTML;
+        scrollToBottom();
+        recognition.start();
+    });
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        messageInput.value = transcript;
+        sendMessage();
+        removeRecordingMessage();
+    };
+
+    recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        alert('Failed to recognize speech. Please try again.');
+        removeRecordingMessage();
+    };
+
+    function removeRecordingMessage() {
+        const recordingMessage = document.querySelector('.recording-message');
+        if (recordingMessage) {
+            recordingMessage.remove();
+        }
+    }
+
+    document.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'stop-recording-btn') {
+            recognition.stop();
+        }
+    });
 });
